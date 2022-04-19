@@ -1,0 +1,52 @@
+service: equipment-rest
+
+frameworkVersion: '3'
+
+useDotenv: true
+	
+custom:
+  tableName: 'equipment-details'
+ 
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["EquipmentsDynamoDBTable", "Arn" ] }
+  environment:
+    EQUIPMENTS_TABLE: ${self:custom.tableName}
+	
+functions:
+  getEquipment:
+    handler: index.handler
+    events:	
+      - http: ANY /
+      - http: 'ANY /{proxy+}'
+
+resources:
+  Resources:
+    EquipmentsDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: equipmentNumber
+            AttributeType: S                                   
+        KeySchema:
+          -
+            AttributeName: equipmentNumber
+            KeyType: HASH                                            
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.tableName}
