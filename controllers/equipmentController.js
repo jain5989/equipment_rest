@@ -77,27 +77,44 @@ export const createEquipment = (req, res) =>  {
     res.status(400).json({ error: 'contractEndDate must be a date' })
   } else if (!_.contains(['Running', 'Stopped'], status)) {
     res.status(400).json({ error: 'status must be a either Running or Stopped' })
-  }
-
-  const params = {
+  } else {
+  const paramsForFetchingEquipmentNumber = {
     TableName: EQUIPMENT_TABLE,
-    Item: {
-      equipmentNumber: equipmentNumber,
-      address: address,
-      contractStartDate: contractStartDate,
-      contractEndDate: contractEndDate,
-      status: status
+    Key: {
+      equipmentNumber: equipmentNumber
     }
   }
-
-  dynamoDb.put(params, (error) => {
+  dynamoDb.get(paramsForFetchingEquipmentNumber, (error, result) => {
     if (error) {
       console.log(error)
-      res.status(400).json({ error: 'Could not create equipment' })
+      res.status(400).json({ error: 'Could not get equipment' })
     }
-    res.set('Access-Control-Allow-Origin', '*');
-    res.json({ equipmentNumber })
-  })
+    if (result.Item) {
+        res.status(400).json({ error: 'equipmentNumber already present' })
+    } else {
+        const params = {
+            TableName: EQUIPMENT_TABLE,
+            Item: {
+              equipmentNumber: equipmentNumber,
+              address: address,
+              contractStartDate: contractStartDate,
+              contractEndDate: contractEndDate,
+              status: status
+            }
+          }
+        
+          dynamoDb.put(params, (error) => {
+            if (error) {
+              console.log(error)
+              res.status(400).json({ error: 'Could not create equipment' })
+            }
+            res.set('Access-Control-Allow-Origin', '*');
+            res.json({ equipmentNumber })
+          })
+    }
+})
+
+   }
 }
 
   const handler = serverless(app)
