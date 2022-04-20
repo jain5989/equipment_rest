@@ -1,4 +1,5 @@
-// EQUIPMENT REST
+**EQUIPMENT REST**
+
 **AUTO GENERATED ARCHITECTURE DIAGRAM FROM CLOUDFORMATION**
 ![template1-designer (1)](https://user-images.githubusercontent.com/25904355/164277336-4201b140-756c-4995-89a9-5d40e26dcd8f.png)
 
