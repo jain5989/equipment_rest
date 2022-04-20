@@ -20,7 +20,7 @@ export const getAllEquipments = (req, res) => {
 // Get equipments endpoint
 
   const { numberOfRows } = req.query.limit
-  const params = { TableName: EQUIPMENT_TABLE }
+  const params = { TableName: EQUIPMENT_TABLE , Limit : numberOfRows}
   const scanResults = []
   dynamoDb.scan(params, (error, result) => {
     if (error) {
