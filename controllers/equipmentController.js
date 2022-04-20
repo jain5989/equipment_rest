@@ -3,13 +3,16 @@ import serverless from 'serverless-http'
 import express from 'express'
 import AWS from 'aws-sdk'
 import _ from 'lodash'
+import cors from 'cors'
 
 const app = express()
 
 const EQUIPMENT_TABLE = process.env.EQUIPMENTS_TABLE
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
-
+app.use(cors({
+    origin: '*'
+}));
 
 export const helloWorld = (req, res) =>{
     res.send('Hello World!')
