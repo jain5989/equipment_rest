@@ -11,8 +11,8 @@ plugins:
 custom:
   tableName: 'equipment-details'  	
   apiKeys:
-    - name: name1
-    - name: name2
+    - name: equipment-api-key-developer
+    - name: equipment-api-key-apps
   
 provider:
   name: aws

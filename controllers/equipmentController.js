@@ -10,9 +10,7 @@ const app = express()
 const EQUIPMENT_TABLE = process.env.EQUIPMENTS_TABLE
 const dynamoDb = new AWS.DynamoDB.DocumentClient()
 
-app.use(cors({
-    origin: '*'
-}));
+app.use(cors());
 
 export const helloWorld = (req, res) =>{
     res.send('Hello World!')
@@ -32,6 +30,7 @@ export const getAllEquipments = (req, res) => {
     if (result.Items) {
       result.Items.forEach((item) => scanResults.push(item))
       console.log(scanResults)
+      res.set('Access-Control-Allow-Origin', '*');
       res.json(scanResults)
     } else {
       res.status(404).json({ error: 'Equipment not found' })
@@ -57,6 +56,7 @@ export const getEquipmentById = (req, res) =>  {
 
     if (result.Item) {
       const { equipmentNumber, address, contractStartDate, contractEndDate, status } = result.Item
+      res.set('Access-Control-Allow-Origin', '*');
       res.json({ equipmentNumber, address, contractStartDate, contractEndDate, status })
     } else {
       res.status(404).json({ error: 'Equipment not found' })
@@ -95,6 +95,7 @@ export const createEquipment = (req, res) =>  {
       console.log(error)
       res.status(400).json({ error: 'Could not create equipment' })
     }
+    res.set('Access-Control-Allow-Origin', '*');
     res.json({ equipmentNumber })
   })
 }
