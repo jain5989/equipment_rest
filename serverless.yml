@@ -33,7 +33,6 @@ provider:
         - { "Fn::GetAtt": ["EquipmentsDynamoDBTable", "Arn" ] }
   environment:
     EQUIPMENTS_TABLE: ${self:custom.tableName}
-	
 functions:
   getEquipment:
     handler: server.handler
