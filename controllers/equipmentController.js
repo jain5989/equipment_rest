@@ -13,11 +13,15 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient()
 app.use(cors());
 
 export const helloWorld = (req, res) =>{
+    console.log("test")
     res.send('Hello World!')
 }
 
+/*
+ * GET /equipment/search?limit=X route to retrieve X equipments
+ */
+
 export const getAllEquipments = (req, res) => {
-// Get equipments endpoint
 
   const numberOfRows  = req.query.limit
   const params = { TableName: EQUIPMENT_TABLE , Limit : numberOfRows}
@@ -39,7 +43,9 @@ export const getAllEquipments = (req, res) => {
 }
 
 
-// Get equipments by equipment number endpoint
+/*
+ * GET /equipment/: equipmentNumber  route to retrieve equipment by equipmentNumber
+ */
 export const getEquipmentById = (req, res) =>  {
   const params = {
     TableName: EQUIPMENT_TABLE,
@@ -64,7 +70,10 @@ export const getEquipmentById = (req, res) =>  {
   })
 }
 
-// Create User endpoint
+/*
+ * POST /equipment  route to create equipment
+ */
+
 export const createEquipment = (req, res) =>  {
       const { equipmentNumber, address, contractStartDate, contractEndDate, status } = req.body
   if (typeof equipmentNumber !== 'string') {
@@ -84,6 +93,7 @@ export const createEquipment = (req, res) =>  {
       equipmentNumber: equipmentNumber
     }
   }
+  // check if equipment already exists
   dynamoDb.get(paramsForFetchingEquipmentNumber, (error, result) => {
     if (error) {
       console.log(error)
